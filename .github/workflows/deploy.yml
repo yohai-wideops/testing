@@ -13,6 +13,7 @@ jobs:
   build-and-push:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
+    environment: gcp-ori-temp-project  # Specify the environment here
 
     steps:
     - name: Checkout Code
@@ -30,12 +31,6 @@ jobs:
     - name: Build Project
       run: |
         npm run build
-        
-    - name: Debug Environment
-      run: |
-        echo "GCP_SA_KEY=${{ secrets.GCP_SA_KEY != '' }}"
-        echo "Secrets available."
-
 
     - name: Authenticate with Google Cloud
       uses: google-github-actions/auth@v2
