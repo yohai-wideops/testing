@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      
+
 permissions:
   contents: read
   id-token: write
@@ -30,6 +30,12 @@ jobs:
     - name: Build Project
       run: |
         npm run build
+        
+    - name: Debug Environment
+      run: |
+        echo "GCP_SA_KEY=${{ secrets.GCP_SA_KEY != '' }}"
+        echo "Secrets available."
+
 
     - name: Authenticate with Google Cloud
       uses: google-github-actions/auth@v2
