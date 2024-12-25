@@ -12,7 +12,6 @@ def increment():
             continue
         curr_str = curr_str + n
         nums[curr_num] = curr_str
-        print(nums)
     if bump == 'major':
         nums[0] = f"{int(nums[0]) + 1}"
     if bump == 'minor':
