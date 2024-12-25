@@ -5,7 +5,7 @@ on:
     branches:
       - master
 env:
-version: ${{ vars.VERSION }}
+  version: ${{ vars.VERSION }}
 permissions:
   contents: read
   id-token: write
