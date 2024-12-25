@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - master
+    paths:
+      - ".github/workflows/**"
+      - "api/popo/**"
+      - "cli/papa/**"
 env:
   version: ${{ vars.VERSION }}
 permissions:
@@ -19,6 +23,44 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
+
+    - name: Extract Commit Message
+      id: extract_commit_message
+      run: |
+        commit_message=$(git log -1 --pretty=%B | tr -d '\n')
+        echo "commit_message=$commit_message" >> $GITHUB_ENV
+        echo "Commit Message: $commit_message"
+
+    - name: Determine Version Type
+      id: determine_version_type
+      run: |
+        bash versioning/commit_message_regex.sh "${{ env.commit_message }}"
+        if [ $? -ne 0 ]; then
+          echo "Error: No matching pattern" >&2
+          exit 1
+        fi
+
+        action_type=$(bash versioning/commit_message_regex.sh "${{ env.commit_message }}")
+        echo "action_type=$action_type" >> $GITHUB_ENV
+        echo "Action Type: $action_type"
+
+    - name: Increment Version
+      id: increment_version
+      run: |
+        new_version=$(python3 versioning/increment_version.py "${{ env.CURR_VERSION }}" "${{ env.action_type }}")
+        echo "new_version=$new_version" >> $GITHUB_ENV
+        echo "New Version: $new_version"
+
+    - name: Commit and Push Updated Version
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: |
+        echo "Updating version to ${{ env.new_version }}"
+        echo ${{ env.new_version }} > VERSION
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "actions@github.com"
+        git add VERSION
+        git commit -m "Bump version to ${{ env.new_version }}"
+        git push
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
