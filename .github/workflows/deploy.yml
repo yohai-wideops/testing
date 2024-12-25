@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - master
-
+env:
+version: ${{ vars.VERSION }}
 permissions:
   contents: read
   id-token: write
@@ -13,7 +14,7 @@ jobs:
   build-and-push:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
-    environment: gcp-ori-temp-project  # Specify the environment here
+    environment: gcp-ori-temp-project  
 
     steps:
     - name: Checkout Code
@@ -43,8 +44,8 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        docker build -t ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GAR_REPO }}/popo:latest .
+        docker build -t ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GAR_REPO }}/${{ env.version }} .
 
     - name: Push Docker Image to GAR
       run: |
-        docker push ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GAR_REPO }}/popo:latest
+        docker push ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GAR_REPO }}/${{ env.version }}
