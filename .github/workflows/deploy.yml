@@ -30,6 +30,7 @@ jobs:
         commit_message=$(git log -1 --pretty=%B | tr -d '\n')
         echo "commit_message=$commit_message" >> $GITHUB_ENV
         echo "Commit Message: $commit_message"
+        echo "Commit Message: $commit_message"
 
     - name: Determine Version Type
       id: determine_version_type
