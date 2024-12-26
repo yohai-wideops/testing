@@ -54,13 +54,20 @@ jobs:
         echo "new_version=$new_version" >> $GITHUB_ENV
         echo "New Version: $new_version"
 
-    - name: Update Repository Variable
-      id: update_variable
+    - name: Get Repository ID
+      id: repo_id
+      run: |
+        repo_id=$(curl -s -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }} | jq -r '.id')
+        echo "repository_id=$repo_id" >> $GITHUB_ENV
+
+    - name: Update Environment Variable
       run: |
         curl -X PATCH \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
-          https://api.github.com/repos/${{ github.repository }}/actions/variables/VERSION \
+          https://api.github.com/repositories/${{ env.repository_id }}/environments/{environment_name}/variables/VERSION \
           -d '{"name":"VERSION","value":"'"${{ env.new_version }}"'"}'
 
     - name: Setup Node.js
