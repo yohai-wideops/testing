@@ -58,7 +58,7 @@ jobs:
       run: |
         curl -X PATCH \
           -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
           https://api.github.com/repos/${{ github.repository }}/actions/variables/VERSION \
           -d '{"name":"VERSION","value":"'"${{ env.new_version }}"'"}'
         echo "Repository variable 'VERSION' updated to ${{ env.new_version }}"
