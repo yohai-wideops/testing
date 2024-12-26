@@ -63,12 +63,14 @@ jobs:
         echo "repository_id=$repo_id" >> $GITHUB_ENV
 
     - name: Update Environment Variable
+      id: update_variable
       run: |
         curl -X PATCH \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
-          https://api.github.com/repositories/${{ env.repository_id }}/environments/{environment_name}/variables/VERSION \
+          https://api.github.com/repositories/${{ env.repository_id }}/environments/gcp-ori-temp-project/variables/VERSION \
           -d '{"name":"VERSION","value":"'"${{ env.new_version }}"'"}'
+
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
