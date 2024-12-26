@@ -22,5 +22,4 @@ def increment():
     res = '.'.join(nums)
     print(res)
 
-
 increment()
